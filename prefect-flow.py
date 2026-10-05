@@ -39,25 +39,48 @@ sqs = boto3.client("sqs")  # the endpoint comes from AWS_ENDPOINT_URL_SQS
 def populate_queue() -> str:
     """POST to the scatter API and return your queue URL."""
     logger = get_run_logger()
+    # Make a POST request to send all the messages to the SQS queue.
+    # The Scatter python file is running in the background, so making this POST request activates the script.
     resp = requests.post(SCATTER_URL, timeout=30)
+    # Stop if the scatter didn't activate
     resp.raise_for_status()
     payload = resp.json()
     logger.info("Scatter API answered: %s", payload)
+    # Get the queue location to pass to the monitoring step
     return payload["sqs_url"]
 
-
+# Handy array to make these long names an index
+COUNTERS = ["ApproximateNumberOfMessages",
+            "ApproximateNumberOfMessagesNotVisible",
+            "ApproximateNumberOfMessagesDelayed"]
+ 
 def get_counts(queue_url: str) -> dict:
-    """Plain helper (not a task): return the three ApproximateNumberOf... counters as integers."""
-    # TODO (Checkpoint A)
-    raise NotImplementedError
+    """Helper function to get all of the message counts in each bucket."""
+    attrs = sqs.get_queue_attributes(
+        QueueUrl=queue_url, AttributeNames=COUNTERS)["Attributes"]
+    return {"visible":   int(attrs["ApproximateNumberOfMessages"]),
+            "in_flight": int(attrs["ApproximateNumberOfMessagesNotVisible"]),
+            "delayed":   int(attrs["ApproximateNumberOfMessagesDelayed"])}
 
 
 @task
 def monitor_queue(queue_url: str, poll_s: int = 5, timeout_s: int = 1200) -> dict:
     """Log the three counters every poll_s seconds until nothing is delayed; raise after timeout_s."""
-    # TODO (Checkpoint A)
-    raise NotImplementedError
-
+    logger = get_run_logger()
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        # Poll queue counters
+        c = get_counts(queue_url)
+        logger.info("visible=%d  in_flight=%d  delayed=%d",
+                    c["visible"], c["in_flight"], c["delayed"])
+        # Stop monitoring if all messages are visible
+        if c["delayed"] == 0:
+            logger.info("All messages released")
+            return c
+        # Start cooldown if some messages are delayed
+        time.sleep(poll_s)
+    # If polling doesn't work fast enough, timeout and exit
+    raise TimeoutError(f"Messages still delayed after {timeout_s} s")
 
 @task
 def collect_messages(queue_url: str, expected: int = 21) -> int:
