@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: Fragments exactly as received from SQS (landed by the Prefect flow).
+    tables:
+      - name: fragments
+        description: One row per received message. order_no arrives as a string.
+        columns:
+          - name: order_no
+          - name: word
+          - name: received_at

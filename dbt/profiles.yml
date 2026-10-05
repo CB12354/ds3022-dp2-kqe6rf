@@ -1,0 +1,10 @@
+# Run dbt from the REPO ROOT so the DuckDB path below resolves correctly:
+#   dbt build --project-dir dbt --profiles-dir dbt
+# (Your Prefect flow should do the same.) DP2_DUCKDB lets you override the path.
+dp2:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DP2_DUCKDB', 'dp2.duckdb') }}"
+      threads: 1

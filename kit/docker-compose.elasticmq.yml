@@ -1,0 +1,11 @@
+# OPTIONAL alternative to Moto: ElasticMQ in Docker, on the same port (9324).
+# Use either Moto OR ElasticMQ, not both at once.
+#   docker compose -f kit/docker-compose.elasticmq.yml up -d
+#   web UI: http://localhost:9325
+services:
+  elasticmq:
+    image: softwaremill/elasticmq-native:latest
+    container_name: dp2-elasticmq
+    ports:
+      - "9324:9324"   # SQS API
+      - "9325:9325"   # web UI

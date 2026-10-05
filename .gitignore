@@ -1,0 +1,18 @@
+# secrets and local config
+.env
+# data, databases, logs (do not commit these)
+*.duckdb
+*.duckdb.wal
+data/
+*.log
+logs/
+# dbt build output
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/.user.yml
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/

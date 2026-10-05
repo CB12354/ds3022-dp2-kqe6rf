@@ -1,0 +1,17 @@
+name: dp2
+version: "1.0"
+config-version: 2
+profile: dp2
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+vars:
+  expected_fragments: 21
+
+models:
+  dp2:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
