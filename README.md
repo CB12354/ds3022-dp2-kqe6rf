@@ -140,6 +140,8 @@ python kit/check_submission.py
 
 and paste the **receipt code** it prints into your README.
 
+PASS  kqe6rf / prefect  receipt: CE225D6900
+
 You may observe and rerun your pipeline as often as you like, but in the end your code must fetch, store, test, reassemble and submit without human intervention. You may not receive messages or sort fragments by hand.
 
 ## Notes and submission
