@@ -8,6 +8,6 @@ Add a new entry at the end of every session (and whenever you stop working).
 - Blocked: The rest of the lab - unknown strategy
 
 ## Thu 08 Oct (Lesson 10)
-- Done: Full, complete, smooth runs
-- Next: Not-so-complete runs
+- Done: Full, complete, smooth runs, DAG sketch
+- Next: Not-so-complete runs, polling strategy, this document
 - Blocked:

@@ -120,12 +120,17 @@ def collect_messages(queue_url: str, expected: int = 21,
                 sqs.delete_message(QueueUrl=queue_url,
                                    ReceiptHandle=msg["ReceiptHandle"])
         stored = stored_count(con)
+        # test 1: delete row
+
+        # test 2: duplicate row
+
     raise TimeoutError(f"Only {stored}/{expected} fragments "
                        f"after {timeout_s} s")
 
 
 @task
 def dbt_build() -> None:
+    #duckdb.connect(DUCKDB_PATH).execute("insert into raw.fragments select order_no, word||'X', received_at from raw.fragments where order_no='7'")
     res = dbtRunner().invoke(["build", "--project-dir", "dbt",
                               "--profiles-dir", "dbt"])
     if not res.success:
