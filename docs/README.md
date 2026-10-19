@@ -103,11 +103,11 @@ Dashboard screenshot at checkpoint A
 Proof there were 0 messages left at the end of the run
 ![no messages left](0-messages-left.png)
 
-Test fail (too many fragments)
-![Too many fragments fail](test_fail_1.png)
+Test fail (too few fragments)
+![Too few fragments fail](test_fail_1.png)
 
-Test fail (not enough fragments)
-![Too few fragments fail](test_fail_2.png)
+Test fail (too many fragments)
+![Too many fragments fail](test_fail_2.png)
 
 Tests passed
 ![Tests passed](tests_passed.png)
