@@ -1,5 +1,7 @@
 # DS 3022 Data Project 2 (Fall 2026): The SQS Puzzle
 
+# YOU CAN FIND RUBRIC-FULFILLING CONTENT SUCH AS SCREENSHOTS AND THE USAGE GUIDE IN [THE README IN THE DOCS FOLDER](docs/README.md)
+
 This data project is a puzzle. Your goal is to put the pieces back together in the right order.
 
 You will write a **Prefect** data pipeline that retrieves 21 messages from an SQS queue, parses their contents, and reassembles a complete phrase from the fragments, one word per message. Your pipeline can run a single time to produce a complete result, or it can run on a schedule. Design your workflow however you see fit. You can run it as many times as you like while testing.
@@ -152,6 +154,9 @@ You may observe and rerun your pipeline as often as you like, but in the end you
 4. Do not commit data, `.duckdb` files, `dbt/target/` or `.env` (the provided `.gitignore` handles this).
 5. Do not edit the files in `kit/`: they are the same for everyone and are used to check your submission.
 6. Your **README must include**: how to set up and run your pipeline; your polling strategy and why; how your dbt tests protect the result (with a screenshot of a test failing on purpose and then passing); a Prefect dashboard screenshot of one **full-delay run** (`DP2_FAST=0`); your receipt code; and a "Chaos round" section (Lesson 11).
+
+PASS  kqe6rf / prefect  receipt: CE225D6900
+
 7. Submit the repository link and your self-assessed **[RUBRIC.md](RUBRIC.md)**. Your README is where you explain and defend your design (25% of the grade).
 
 ## Reference

@@ -41,7 +41,21 @@ def prepare_landing() -> None:
         con.execute("create or replace table raw.fragments ("
                     "order_no varchar, word varchar, "
                     "received_at timestamp)")
+        con.execute("create or replace table raw.rejects ("
+                    "message_id varchar, attributes varchar, "
+                    "received_at timestamp)")
  
+ 
+def parse(msg) -> tuple[str, str] | None:
+    a = msg.get("MessageAttributes", {})
+    try:
+        order_no = a["order_no"]["StringValue"]
+        word = a["word"]["StringValue"]
+    except KeyError:
+        return None                       # an attribute is missing
+    if not order_no.isdigit():
+        return None                       # position is not a number
+    return order_no, word
  
 def stored_count(con) -> int:
     return con.execute("select count(distinct order_no) "
@@ -112,18 +126,21 @@ def collect_messages(queue_url: str, expected: int = 21,
                                        MessageAttributeNames=["All"],
                                        WaitTimeSeconds=10)
             for msg in resp.get("Messages", []):
-                a = msg["MessageAttributes"]
-                con.execute("insert into raw.fragments "
-                            "values (?, ?, current_timestamp)",
-                            [a["order_no"]["StringValue"],
-                             a["word"]["StringValue"]])
-                sqs.delete_message(QueueUrl=queue_url,
+                fragment = parse(msg)
+                if fragment is None:              # poison message
+                    logger.warning("Rejected malformed message %s",
+                                   msg["MessageId"])
+                    con.execute("insert into raw.rejects "
+                                "values (?, ?, current_timestamp)",
+                                [msg["MessageId"],
+                                 str(msg.get("MessageAttributes"))])
+                else:
+                    con.execute("insert into raw.fragments "
+                                "values (?, ?, current_timestamp)",
+                                list(fragment))
+                sqs.delete_message(QueueUrl=queue_url,       # always
                                    ReceiptHandle=msg["ReceiptHandle"])
         stored = stored_count(con)
-        # test 1: delete row
-
-        # test 2: duplicate row
-
     raise TimeoutError(f"Only {stored}/{expected} fragments "
                        f"after {timeout_s} s")
 

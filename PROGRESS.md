@@ -11,3 +11,9 @@ Add a new entry at the end of every session (and whenever you stop working).
 - Done: Full, complete, smooth runs, DAG sketch
 - Next: Not-so-complete runs, polling strategy, this document
 - Blocked:
+
+## Sun 18 Oct (Individual work)
+- Done: Everything before checkpoint F except for a readme usage guide
+
+## Mon 19 Oct (Lesson 11)
+- Done: All clear
