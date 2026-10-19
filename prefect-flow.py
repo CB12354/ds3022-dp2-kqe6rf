@@ -61,7 +61,8 @@ def stored_count(con) -> int:
     return con.execute("select count(distinct order_no) "
                        "from raw.fragments").fetchone()[0]
 
-@task (retries=2, retry_delay_seconds=5)
+# No retries on populating the queue
+@task
 def populate_queue() -> str:
     """POST to the scatter API and return your queue URL."""
     logger = get_run_logger()
